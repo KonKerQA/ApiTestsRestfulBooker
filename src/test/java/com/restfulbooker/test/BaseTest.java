@@ -1,4 +1,4 @@
-package test;
+package com.restfulbooker.test;
 
 import com.codeborne.selenide.Configuration;
 import io.restassured.RestAssured;
