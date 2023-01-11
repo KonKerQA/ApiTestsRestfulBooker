@@ -11,21 +11,18 @@ import static com.restfulbooker.helper.APIListenerHelper.withCustomTemplates;
 import static io.restassured.RestAssured.with;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class GetBookingSpec {
-    public static RequestSpecification getBookingIdsRequestSpec = with()
+public class CreateBookingSpec {
+    public static RequestSpecification createBookingRequestSpec = with()
             .filter(withCustomTemplates())
             .baseUri(baseUrl)
             .basePath("/booking")
-            .param("firstname", "casanova")
-            .param("lastname", "mas")
             .log().uri()
             .log().body()
             .contentType(ContentType.JSON);
 
-    public static ResponseSpecification getBookingIdsResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification createBookingResponseSpec = new ResponseSpecBuilder()
             .expectStatusCode(200)
             .log(LogDetail.STATUS)
             .log(LogDetail.BODY)
-            .expectBody("bookingid", notNullValue())
             .build();
 }
