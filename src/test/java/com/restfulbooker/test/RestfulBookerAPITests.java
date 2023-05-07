@@ -3,6 +3,7 @@ package com.restfulbooker.test;
 import com.restfulbooker.models.BookerModel;
 import com.restfulbooker.models.BookingDatesModel;
 import com.restfulbooker.models.LoginModelResponse;
+import com.restfulbooker.models.NewBookerModel;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,39 +33,53 @@ public class RestfulBookerAPITests extends BaseTest {
                 .then()
                 .statusCode(200)
                 .extract().as(LoginModelResponse.class);
-    assertThat(loginModelResponse.getToken()).isNotNull();
+        assertThat(loginModelResponse.getToken()).isNotNull();
     }
 
     @Test
     void getBooking() {
 
-        given()
-                .log().uri()
+        BookerModel bookerModel = given()
+                .config(config)
+                .spec(jsonSpec)
                 .when()
                 .get("booking/311")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200);
+                .statusCode(200)
+                .extract().as(BookerModel.class);
+
+        assertThat(bookerModel.getFirstname()).isEqualTo("John");
+        assertThat(bookerModel.getLastname()).isEqualTo("Smith");
+        assertThat(bookerModel.getTotalprice()).isEqualTo(111);
+        assertThat(bookerModel.isDepositpaid()).isEqualTo(true);
+        assertThat(bookerModel.getBookingdates().getCheckin()).isEqualTo("2018-01-01");
+        assertThat(bookerModel.getBookingdates().getCheckout()).isEqualTo("2019-01-01");
+        assertThat(bookerModel.getAdditionalneeds()).isEqualTo("Breakfast");
     }
 
     @Test
-    void createBooking() {
-        BookerModel body = new BookerModel();
-        body.setFirstname("admin");
-        body.setLastname("admin");
-        body.setTotalprice(1131);
-        body.setDepositpaid(true);
-        body.setBookingdates(BookingDatesModel.builder().checkin("2018-01-01").checkout("2019-01-01").build());
-        body.setAdditionalneeds("PlaySlow");
+    void createBooking() throws IOException {
+        String req = convertFileToString("request/newBooking.json");
 
-        given()
-                .spec(createBookingRequestSpec)
-                .body(body)
+        NewBookerModel newbookerModel = given()
+                .config(config)
+                .spec(jsonSpec)
+                .body(req)
                 .when()
-                .post()
+                .post("/booking")
                 .then()
-                .spec(createBookingResponseSpec);
+                .log().body()
+                .statusCode(200)
+                .extract().as(NewBookerModel.class);
+
+        assertThat(newbookerModel.getBookingid()).isNotNull();
+        assertThat(newbookerModel.getBooking().getFirstname()).isEqualTo("Stellio");
+        assertThat(newbookerModel.getBooking().getLastname()).isEqualTo("Costo");
+        assertThat(newbookerModel.getBooking().getTotalprice()).isEqualTo(223);
+        assertThat(newbookerModel.getBooking().isDepositpaid()).isEqualTo(true);
+        assertThat(newbookerModel.getBooking().getBookingdates().getCheckin()).isEqualTo("2020-01-01");
+        assertThat(newbookerModel.getBooking().getBookingdates().getCheckout()).isEqualTo("2021-01-01");
+        assertThat(newbookerModel.getBooking().getAdditionalneeds()).isEqualTo("vodka");
     }
 
 

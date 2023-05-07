@@ -13,6 +13,7 @@ def allureVersion = "2.19.0",
     assertJVersion = "3.23.1",
     junitVersion = "5.9.0",
     slf4jVersion = "1.7.32",
+    jacksonVersion = "2.12.3",
     lombokVersion = "1.18.20"
 
 allure {
@@ -37,7 +38,8 @@ dependencies {
             "org.assertj:assertj-core:$assertJVersion",
             "org.junit.jupiter:junit-jupiter:$junitVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
-            "org.projectlombok:lombok:$lombokVersion"
+            "org.projectlombok:lombok:$lombokVersion",
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     )
 }
 
