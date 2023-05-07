@@ -1,16 +1,13 @@
 package com.restfulbooker.test;
 
-import com.restfulbooker.models.BookerModel;
-import com.restfulbooker.models.BookingDatesModel;
-import com.restfulbooker.models.LoginModelResponse;
-import com.restfulbooker.models.NewBookerModel;
+import com.restfulbooker.models.booking.BookerModel;
+import com.restfulbooker.models.login.LoginModelResponse;
+import com.restfulbooker.models.booking.NewBookerModel;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static com.restfulbooker.helper.RequestConverter.convertFileToString;
-import static com.restfulbooker.specs.CreateBookingSpec.createBookingRequestSpec;
-import static com.restfulbooker.specs.CreateBookingSpec.createBookingResponseSpec;
 import static com.restfulbooker.specs.JsonSpec.jsonSpec;
 import static io.restassured.RestAssured.config;
 import static io.restassured.RestAssured.given;
@@ -41,7 +38,6 @@ public class RestfulBookerAPITests extends BaseTest {
 
         BookerModel bookerModel = given()
                 .config(config)
-                .spec(jsonSpec)
                 .when()
                 .get("booking/311")
                 .then()
@@ -84,16 +80,16 @@ public class RestfulBookerAPITests extends BaseTest {
 
 
     @Test
-    void getBookingIds() {
-        given()
-                .log().uri()
+    void getAllBookingIds() {
+        NewBookerModel newbookerModel = given()
                 .when()
-                .get("/booking?firstname=admin&lastname=admin")
+                .get("/booking")
                 .then()
-                .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("bookingid", notNullValue());
+                .extract().as(NewBookerModel.class);
+
+        assertThat(newbookerModel.getBookingid()).isNotNull();
     }
 
 /*

@@ -1,10 +1,8 @@
-package com.restfulbooker.models;
+package com.restfulbooker.models.booking;
 
 import io.qameta.allure.internal.shadowed.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
