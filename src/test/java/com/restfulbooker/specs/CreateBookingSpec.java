@@ -6,15 +6,12 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
-import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.restfulbooker.helper.APIListenerHelper.withCustomTemplates;
 import static io.restassured.RestAssured.with;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 public class CreateBookingSpec {
     public static RequestSpecification createBookingRequestSpec = with()
             .filter(withCustomTemplates())
-            .baseUri(baseUrl)
             .basePath("/booking")
             .log().uri()
             .log().body()

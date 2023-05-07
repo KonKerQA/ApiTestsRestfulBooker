@@ -3,7 +3,7 @@ package com.restfulbooker.models;
 import lombok.Data;
 
 @Data
-public class LoginModel {
+public class LoginModelRequest {
     private String username;
     private String password;
 }
