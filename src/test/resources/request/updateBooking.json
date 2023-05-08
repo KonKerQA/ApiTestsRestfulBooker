@@ -1,0 +1,11 @@
+{
+  "firstname": "Stellio",
+  "lastname": "Costo",
+  "totalprice": 144,
+  "depositpaid": false,
+  "bookingdates": {
+    "checkin": "2022-01-01",
+    "checkout": "2023-01-01"
+  },
+  "additionalneeds": "lolkek"
+}

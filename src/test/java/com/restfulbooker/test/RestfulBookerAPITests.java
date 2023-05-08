@@ -1,5 +1,8 @@
 package com.restfulbooker.test;
 
+import com.restfulbooker.function.AuthFunction;
+import com.restfulbooker.function.CreateNewBookingFunction;
+import com.restfulbooker.models.booking.AllBookingModel;
 import com.restfulbooker.models.booking.BookerModel;
 import com.restfulbooker.models.login.LoginModelResponse;
 import com.restfulbooker.models.booking.NewBookerModel;
@@ -41,6 +44,7 @@ public class RestfulBookerAPITests extends BaseTest {
                 .when()
                 .get("booking/311")
                 .then()
+                .log().body()
                 .statusCode(200)
                 .extract().as(BookerModel.class);
 
@@ -78,35 +82,42 @@ public class RestfulBookerAPITests extends BaseTest {
         assertThat(newbookerModel.getBooking().getAdditionalneeds()).isEqualTo("vodka");
     }
 
-
+//todo доделать десерелиазацию
     @Test
     void getAllBookingIds() {
-        NewBookerModel newbookerModel = given()
+
+        AllBookingModel allBookingModel = given()
                 .when()
                 .get("/booking")
                 .then()
                 .log().body()
                 .statusCode(200)
-                .extract().as(NewBookerModel.class);
+                .extract().as(AllBookingModel.class);
 
-        assertThat(newbookerModel.getBookingid()).isNotNull();
+        assertThat(allBookingModel.getAllbookingid().get(0).getBookingid()).isNotNull();
+    }
+
+
+    @Test
+    void updateBooking() throws IOException {
+        String token = String.valueOf(AuthFunction.getAuthToken());
+        int bookingId = CreateNewBookingFunction.createBooking();
+
+        String req = convertFileToString("request/newBooking.json");
+
+        given()
+                .config(config)
+                .spec(jsonSpec)
+                .cookie("token",token)
+                .body(req)
+                .when()
+                .put("/booking/" + bookingId)
+                .then()
+                .log().body()
+                .statusCode(200);
     }
 
 /*
-    @Test
-    void updateBooking() {
-        given()
-                .log().uri()
-                .when()
-                .get("restful-booker.herokuapp.com/booking/" + id)
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .body("bookingid", notNullValue());
-    }
-
-
     @Test
     void partialUpdateBooking() {
         given()
