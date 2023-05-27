@@ -22,6 +22,7 @@ public class CreateNewBookingFunction {
                 .when()
                 .post("/booking")
                 .then()
+                .log().body()
                 .statusCode(200)
                 .extract().response().as(NewBookerModel.class);
 

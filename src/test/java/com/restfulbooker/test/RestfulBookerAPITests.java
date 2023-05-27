@@ -100,10 +100,10 @@ public class RestfulBookerAPITests extends BaseTest {
 
     @Test
     void updateBooking() throws IOException {
-        String token = String.valueOf(AuthFunction.getAuthToken());
+        String token = AuthFunction.getAuthToken().getToken();
         int bookingId = CreateNewBookingFunction.createBooking();
-
-        String req = convertFileToString("request/newBooking.json");
+        System.out.println(token);
+        String req = convertFileToString("request/updateBooking.json");
 
         given()
                 .config(config)
