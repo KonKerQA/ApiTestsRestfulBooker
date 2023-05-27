@@ -82,7 +82,7 @@ public class RestfulBookerAPITests extends BaseTest {
         assertThat(newbookerModel.getBooking().getAdditionalneeds()).isEqualTo("vodka");
     }
 
-//todo доделать десерелиазацию
+    //todo доделать десерелиазацию
     @Test
     void getAllBookingIds() {
 
@@ -105,46 +105,75 @@ public class RestfulBookerAPITests extends BaseTest {
         System.out.println(token);
         String req = convertFileToString("request/updateBooking.json");
 
-        given()
+        BookerModel bookerModel = given()
                 .config(config)
                 .spec(jsonSpec)
-                .cookie("token",token)
+                .cookie("token", token)
                 .body(req)
                 .when()
                 .put("/booking/" + bookingId)
                 .then()
                 .log().body()
-                .statusCode(200);
-    }
-
-/*
-    @Test
-    void partialUpdateBooking() {
-        given()
-                .log().uri()
-                .when()
-                .get("/booking?firstname=admin&lastname=admin")
-                .then()
-                .log().status()
-                .log().body()
                 .statusCode(200)
-                .body("bookingid", notNullValue());
+                .extract().as(BookerModel.class);
+
+        assertThat(bookerModel.getFirstname()).isEqualTo("Stellio");
+        assertThat(bookerModel.getLastname()).isEqualTo("Costo");
+        assertThat(bookerModel.getTotalprice()).isEqualTo(144);
+        assertThat(bookerModel.isDepositpaid()).isEqualTo(false);
+        assertThat(bookerModel.getBookingdates().getCheckin()).isEqualTo("2022-01-01");
+        assertThat(bookerModel.getBookingdates().getCheckout()).isEqualTo("2023-01-01");
+        assertThat(bookerModel.getAdditionalneeds()).isEqualTo("lolkek");
     }
 
 
     @Test
-    void deleteBooking() {
-        given()
-                .log().uri()
+    void partialUpdateBooking() throws IOException  {
+        String token = AuthFunction.getAuthToken().getToken();
+        int bookingId = CreateNewBookingFunction.createBooking();
+        System.out.println(token);
+        String req = convertFileToString("request/partialUpdateBooking.json");
+
+        BookerModel bookerModel = given()
+                .config(config)
+                .spec(jsonSpec)
+                .cookie("token", token)
+                .body(req)
                 .when()
-                .get("/booking?firstname=admin&lastname=admin")
+                .patch("/booking/" + bookingId)
                 .then()
-                .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("bookingid", notNullValue());
+                .extract().as(BookerModel.class);
+
+        assertThat(bookerModel.getFirstname()).isEqualTo("David");
+        assertThat(bookerModel.getLastname()).isEqualTo("Trad");
+        assertThat(bookerModel.getTotalprice()).isEqualTo(223);
+        assertThat(bookerModel.isDepositpaid()).isEqualTo(true);
+        assertThat(bookerModel.getBookingdates().getCheckin()).isEqualTo("2020-01-01");
+        assertThat(bookerModel.getBookingdates().getCheckout()).isEqualTo("2021-01-01");
+        assertThat(bookerModel.getAdditionalneeds()).isEqualTo("vodka");
     }
-*/
+
+
+    @Test
+    void deleteBooking() throws IOException {
+        String token = AuthFunction.getAuthToken().getToken();
+        int bookingId = CreateNewBookingFunction.createBooking();
+        System.out.println(token);
+        String req = convertFileToString("request/partialUpdateBooking.json");
+
+        given()
+                .config(config)
+                .spec(jsonSpec)
+                .cookie("token", token)
+                .body(req)
+                .when()
+                .delete("/booking/" + bookingId)
+                .then()
+                .log().body()
+                .statusCode(201);
+    }
 
 
 }
